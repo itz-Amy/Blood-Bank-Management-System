@@ -5,8 +5,6 @@ USE bloodbank;
 
 
 
-
-
 CREATE TABLE BloodType(blood_type_id VARCHAR(5) PRIMARY KEY, abo_group CHAR(3) NOT NULL CHECK(abo_group IN ('A', 'B', 'AB','O')), rh_factor VARCHAR(10) NOT NULL CHECK(rh_factor IN ('Positive', 'Negative')), UNIQUE(abo_group,rh_factor)
 );
 
@@ -570,9 +568,9 @@ VALUES
 ('BT005', 'BT005');
 
 
-
-CREATE FUNCTION fn_DaysBetween(start_date DATE, end_date DATE) RETURNS INT DETERMINISTIC BEGIN RETURN DATEDIFF(end_date, start_date); END; 
-
+DELIMITER //
+CREATE FUNCTION fn_DaysBetween(start_date DATE, end_date DATE) RETURNS INT DETERMINISTIC BEGIN RETURN DATEDIFF(end_date, start_date); END//
+DELIMITER ;
 
 
 
