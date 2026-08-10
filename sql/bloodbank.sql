@@ -1,17 +1,9 @@
-//schema file 
 
--- ==========================================
--- BLOOD BANK DATABASE
--- ==========================================
 
 CREATE DATABASE IF NOT EXISTS bloodbank;
 USE bloodbank;
 
 
-
--- ==========================================
--- 1. TABLES
--- ==========================================
 
 
 
@@ -121,18 +113,6 @@ CREATE TABLE Compatibility (
 
 
 
-
-
-
-
-
-
-
-
-
--- ==========================================
--- 2. SAMPLE DATA
--- ==========================================
 
 
 
@@ -591,12 +571,6 @@ VALUES
 
 
 
-
--- ==========================================
--- 3. FUNCTIONS
--- ==========================================
-
-
 CREATE FUNCTION fn_DaysBetween(start_date DATE, end_date DATE) RETURNS INT DETERMINISTIC BEGIN RETURN DATEDIFF(end_date, start_date); END; 
 
 
@@ -626,11 +600,6 @@ END //
 
 DELIMITER ;
 
-
-
--- ==========================================
--- 4. VIEWS
--- ==========================================
 
 
 CREATE VIEW vw_CompatibleAvailableUnits AS
@@ -705,14 +674,6 @@ ORDER BY sc.ScreeningDate ASC, bu.bloodUnit_id;
 
 
 
-
-
-
-
-
--- ==========================================
--- 5. TRIGGERS
--- ==========================================
 
 
 DELIMITER //
@@ -948,11 +909,6 @@ DELIMITER ;
 
 
 
-
-
--- ==========================================
--- 6. STORED PROCEDURES
--- ==========================================
 
 
 DELIMITER //
