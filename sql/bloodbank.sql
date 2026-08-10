@@ -5,6 +5,8 @@ USE bloodbank;
 
 
 
+
+
 CREATE TABLE BloodType(blood_type_id VARCHAR(5) PRIMARY KEY, abo_group CHAR(3) NOT NULL CHECK(abo_group IN ('A', 'B', 'AB','O')), rh_factor VARCHAR(10) NOT NULL CHECK(rh_factor IN ('Positive', 'Negative')), UNIQUE(abo_group,rh_factor)
 );
 
@@ -38,7 +40,7 @@ CREATE TABLE Donor(donor_id VARCHAR(5) PRIMARY KEY, donorFName VARCHAR(30), dono
 
 CREATE TABLE Deferral( deferralID VARCHAR(5) PRIMARY KEY, donorID VARCHAR(5) NOT NULL, deferral_date DATE NOT NULL, reason VARCHAR(100), FOREIGN KEY (donorID) REFERENCES Donor(donor_id) ); 
 
-CREATE TABLE TemporaryDeferral( tempDeferral_id VARCHAR (5) PRIMARY KEY, donorID VARCHAR (5) NOT NULL, endDate DATE NOT NULL, FOREIGN KEY (donorID) REFERENCES Donor(donor_id) ); 
+CREATE TABLE TemporaryDeferral( tempDeferral_id VARCHAR (5) PRIMARY KEY, deferralID VARCHAR (5) NOT NULL, endDate DATE NOT NULL, FOREIGN KEY (deferralID) REFERENCES Deferral(deferralID) ); 
 
 
 CREATE TABLE Staff(staff_id VARCHAR(5) PRIMARY KEY, staffFName VARCHAR(30), staffLName VARCHAR(30),
@@ -250,23 +252,39 @@ INSERT INTO Deferral (deferralID, donorID, deferral_date, reason) VALUES
 ('DF003', 'D013', '2025-02-20', 'Fever'), 
 ('DF004', 'D004', '2025-03-01', 'Recent surgery'), 
 ('DF005', 'D008', '2025-03-12', 'Under medication'), 
-('DF006', 'D003', '2025-03-18', 'Pregnancy');
+('DF006', 'D003', '2025-03-18', 'Pregnancy'),
+('DF007', 'D002', '2025-03-01', 'Recent vaccination'),
+('DF008', 'D004', '2025-04-15', 'Recent surgery'),
+('DF009', 'D006', '2025-05-10', 'Recent illness'),
+('DF010', 'D008', '2025-06-01', 'Recent tattoo'),
+('DF011', 'D010', '2025-06-20', 'Recent antibiotic use'),
+('DF012', 'D012', '2025-07-05', 'Low hemoglobin'),
+('DF013', 'D014', '2025-08-01', 'Recent dental procedure'),
+('DF014', 'D016', '2025-08-25', 'Recent travel to malaria-risk area'),
+('DF015', 'D018', '2025-09-10', 'Temporary illness'),
+('DF016', 'D020', '2025-10-05', 'Recent vaccination'),
+('DF017', 'D022', '2025-10-30', 'Recent piercing'),
+('DF018', 'D024', '2025-11-15', 'Under temporary medication');
 
 
 
-INSERT INTO TemporaryDeferral (tempDeferral_id, donorID, endDate) VALUES 
-('TD001', 'D002', '2025-04-01'), 
-('TD002', 'D004', '2025-05-15'), 
-('TD003', 'D006', '2025-06-10'), 
-('TD004', 'D008', '2025-07-01'), 
-('TD005', 'D010', '2025-07-20'), 
-('TD006', 'D012', '2025-08-05'), 
-('TD007', 'D014', '2025-09-01'), 
-('TD008', 'D016', '2025-09-25'), 
-('TD009', 'D018', '2025-10-10'), 
-('TD010', 'D020', '2025-11-05'), 
-('TD011', 'D022', '2025-11-30'), 
-('TD012', 'D024', '2025-12-15'); 
+INSERT INTO TemporaryDeferral
+    (tempDeferral_id, deferralID, endDate)
+VALUES
+    ('TD001', 'DF007', '2025-04-01'),
+    ('TD002', 'DF008', '2025-05-15'),
+    ('TD003', 'DF009', '2025-06-10'),
+    ('TD004', 'DF010', '2025-07-01'),
+    ('TD005', 'DF011', '2025-07-20'),
+    ('TD006', 'DF012', '2025-08-05'),
+    ('TD007', 'DF013', '2025-09-01'),
+    ('TD008', 'DF014', '2025-09-25'),
+    ('TD009', 'DF015', '2025-10-10'),
+    ('TD010', 'DF016', '2025-11-05'),
+    ('TD011', 'DF017', '2025-11-30'),
+    ('TD012', 'DF018', '2025-12-15');
+
+
 
 
 INSERT INTO Staff (staff_id, staffFName, staffLName, staffType, branchID, role_id) VALUES ('S001', 'Daniel', 'Mensah', 'Full-Time', 'B001', 'R005'), 
@@ -568,9 +586,9 @@ VALUES
 ('BT005', 'BT005');
 
 
-DELIMITER //
-CREATE FUNCTION fn_DaysBetween(start_date DATE, end_date DATE) RETURNS INT DETERMINISTIC BEGIN RETURN DATEDIFF(end_date, start_date); END//
-DELIMITER ;
+
+CREATE FUNCTION fn_DaysBetween(start_date DATE, end_date DATE) RETURNS INT DETERMINISTIC BEGIN RETURN DATEDIFF(end_date, start_date); END; 
+
 
 
 
@@ -585,7 +603,7 @@ BEGIN
 
     SELECT COUNT(*) INTO v_count
     FROM Deferral df
-    LEFT JOIN TemporaryDeferral td ON df.deferralID = td.tempDeferral_id
+    LEFT JOIN TemporaryDeferral td ON df.deferralID = td.Deferral_id
     WHERE df.donorID = p_donor_id
       AND (td.tempDeferral_id IS NULL OR td.endDate > CURDATE());
 
