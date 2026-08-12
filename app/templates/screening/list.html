@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block title %}Screening{% endblock %}
+{% block content %}
+<h1>Screening</h1>
+<a href="{{ url_for('screening.create_screening') }}" class="btn">+ New Screening</a>
+<table>
+    <tr>
+        <th>ID</th><th>Blood Unit</th><th>Staff</th><th>Date</th><th>Status</th><th>Actions</th>
+    </tr>
+    {% for s in screenings %}
+    <tr>
+        <td>{{ s.Screening_id }}</td>
+        <td>{{ s.BloodUnitID }}</td>
+        <td>{{ s.StaffID }}</td>
+        <td>{{ s.ScreeningDate }}</td>
+        <td>{{ s.OverallStatus }}</td>
+        <td>
+            <form method="POST" action="{{ url_for('screening.delete_screening', screening_id=s.Screening_id) }}" style="display:inline">
+                <button type="submit" onclick="return confirm('Delete this screening?')">Delete</button>
+            </form>
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+{% endblock %}

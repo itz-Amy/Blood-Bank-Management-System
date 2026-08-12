@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block title %}Distribution{% endblock %}
+{% block content %}
+<h1>Distribution</h1>
+<a href="{{ url_for('distribution.create_distribution') }}" class="btn">+ Issue Blood</a>
+<table>
+    <tr><th>ID</th><th>Request</th><th>Hospital</th><th>Staff</th><th>Units</th><th>Issue Date</th></tr>
+    {% for i in issuances %}
+    <tr>
+        <td>{{ i.Issuance_id }}</td>
+        <td>{{ i.Request_id }}</td>
+        <td>{{ i.request.hospital.HospitalName }}</td>
+        <td>{{ i.StaffID }}</td>
+        <td>{{ i.IssuedUnits }}</td>
+        <td>{{ i.IssueDate }}</td>
+    </tr>
+    {% endfor %}
+</table>
+{% endblock %}

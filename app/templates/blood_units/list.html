@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block title %}Blood Units{% endblock %}
+
+{% block content %}
+<h1>Blood Units</h1>
+
+<table>
+    <tr>
+        <th>Unit ID</th>
+        <th>Donation ID</th>
+        <th>Procurement Date</th>
+        <th>Expiry Date</th>
+        <th>Volume</th>
+    </tr>
+    {% for unit in units %}
+    <tr>
+        <td>{{ unit.bloodUnit_id }}</td>
+        <td>{{ unit.donation_id }}</td>
+        <td>{{ unit.procurement_date }}</td>
+        <td>{{ unit.expiry_date }}</td>
+        <td>{{ unit.blood_vol }}</td>
+    </tr>
+    {% endfor %}
+</table>
+{% endblock %}

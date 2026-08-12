@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block title %}Donors{% endblock %}
+
+{% block content %}
+<h1>Donors</h1>
+
+<a href="{{ url_for('donors.create_donor') }}">+ New Donor</a>
+
+<form method="GET">
+    <input type="text" name="search" placeholder="Search by name" value="{{ request.args.get('search', '') }}">
+    <select name="blood_type">
+        <option value="">All Blood Types</option>
+        {% for bt in blood_types %}
+        <option value="{{ bt.blood_type_id }}" {% if request.args.get('blood_type') == bt.blood_type_id %}selected{% endif %}>
+            {{ bt.abo_group }}{{ '+' if bt.rh_factor == 'Positive' else '-' }}
+        </option>
+        {% endfor %}
+    </select>
+    <button type="submit">Filter</button>
+</form>
+
+<table border="1" cellpadding="6">
+    <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>DOB</th>
+        <th>Gender</th>
+        <th>Contact</th>
+        <th>Blood Type</th>
+        <th>Actions</th>
+    </tr>
+    {% for donor in donors %}
+    <tr>
+        <td>{{ donor.donor_id }}</td>
+        <td>{{ donor.donorFName }} {{ donor.donorLName }}</td>
+        <td>{{ donor.DOB }}</td>
+        <td>{{ donor.gender }}</td>
+        <td>{{ donor.contact }}</td>
+        <td>{{ donor.blood_type.abo_group }}{{ '+' if donor.blood_type.rh_factor == 'Positive' else '-' }}</td>
+        <td>
+            <a href="{{ url_for('donors.edit_donor', donor_id=donor.donor_id) }}">Edit</a>
+            <form method="POST" action="{{ url_for('donors.delete_donor', donor_id=donor.donor_id) }}" style="display:inline">
+                <button type="submit" onclick="return confirm('Delete this donor?')">Delete</button>
+            </form>
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+{% endblock %}

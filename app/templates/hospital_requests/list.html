@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block title %}Hospital Requests{% endblock %}
+{% block content %}
+<h1>{% if current_user.user_type == 'hospital' %}My Requests{% else %}Hospital Requests{% endif %}</h1>
+
+{% if current_user.user_type == 'hospital' %}
+<a href="{{ url_for('hospital_requests.create_request') }}" class="btn">+ New Request</a>
+{% endif %}
+
+<table>
+    <tr>
+        <th>ID</th><th>Hospital</th><th>Blood Type</th><th>Priority</th><th>Quantity</th><th>Status</th><th>Date</th>
+        {% if current_user.user_type == 'staff' %}<th>Actions</th>{% endif %}
+    </tr>
+    {% for r in requests %}
+    <tr>
+        <td>{{ r.Request_id }}</td>
+        <td>{{ r.hospital.HospitalName }}</td>
+        <td>{{ r.blood_type.abo_group }}{{ '+' if r.blood_type.rh_factor == 'Positive' else '-' }}</td>
+        <td>{{ r.Priority }}</td>
+        <td>{{ r.Quantity }}</td>
+        <td>{{ r.Status }}</td>
+        <td>{{ r.RequestDate }}</td>
+        {% if current_user.user_type == 'staff' %}
+        <td><a href="{{ url_for('hospital_requests.update_status', request_id=r.Request_id) }}">Update Status</a></td>
+        {% endif %}
+    </tr>
+    {% endfor %}
+</table>
+{% endblock %}

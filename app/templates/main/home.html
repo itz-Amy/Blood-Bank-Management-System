@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+<div class="hero">
+    <h1>Welcome back, {{ user.user_id }}</h1>
+    <p class="subtitle">Blood Bank Management System — {{ user.user_type|capitalize }} Portal</p>
+</div>
+
+{% if user.user_type == 'staff' %}
+<div class="dashboard-grid">
+    <a href="{{ url_for('donors.list_donors') }}" class="dashboard-card">
+        <span class="card-icon">🩸</span>
+        <h3>Donors</h3>
+        <p>Manage donor records</p>
+    </a>
+    <a href="{{ url_for('donations.list_donations') }}" class="dashboard-card">
+        <span class="card-icon">📋</span>
+        <h3>Donations</h3>
+        <p>Record and track donations</p>
+    </a>
+    <a href="{{ url_for('blood_units.list_blood_units') }}" class="dashboard-card">
+        <span class="card-icon">🧪</span>
+        <h3>Blood Units</h3>
+        <p>View collected units</p>
+    </a>
+    <a href="{{ url_for('screening.list_screenings') }}" class="dashboard-card">
+        <span class="card-icon">🔬</span>
+        <h3>Screening</h3>
+        <p>Test and clear blood units</p>
+    </a>
+    <a href="{{ url_for('inventory.list_inventory') }}" class="dashboard-card">
+        <span class="card-icon">📦</span>
+        <h3>Inventory</h3>
+        <p>Track stock by branch</p>
+    </a>
+    <a href="{{ url_for('hospital_requests.list_requests') }}" class="dashboard-card">
+        <span class="card-icon">🏥</span>
+        <h3>Hospital Requests</h3>
+        <p>Review incoming requests</p>
+    </a>
+    <a href="{{ url_for('distribution.list_distributions') }}" class="dashboard-card">
+        <span class="card-icon">🚚</span>
+        <h3>Distribution</h3>
+        <p>Issue blood to hospitals</p>
+    </a>
+</div>
+
+{% elif user.user_type == 'hospital' %}
+<div class="dashboard-grid">
+    <a href="{{ url_for('hospital_requests.list_requests') }}" class="dashboard-card">
+        <span class="card-icon">🏥</span>
+        <h3>My Requests</h3>
+        <p>View your submitted requests</p>
+    </a>
+    <a href="{{ url_for('hospital_requests.create_request') }}" class="dashboard-card">
+        <span class="card-icon">➕</span>
+        <h3>New Request</h3>
+        <p>Submit a new blood request</p>
+    </a>
+</div>
+{% endif %}
+{% endblock %}

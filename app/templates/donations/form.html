@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+<h1>{{ title }}</h1>
+
+<form method="POST">
+    {{ form.hidden_tag() }}
+
+    <p>{{ form.donation_id.label }}<br>{{ form.donation_id() }}</p>
+    <p>{{ form.donor_id.label }}<br>{{ form.donor_id() }}
+        {% for error in form.donor_id.errors %}
+            <br><span style="color:red">{{ error }}</span>
+        {% endfor %}
+    </p>
+    <p>{{ form.volume.label }}<br>{{ form.volume() }}</p>
+    <p>{{ form.branch_id.label }}<br>{{ form.branch_id() }}</p>
+    <p>{{ form.DonationDate.label }}<br>{{ form.DonationDate() }}</p>
+
+    {{ form.submit() }}
+</form>
+
+<a href="{{ url_for('donations.list_donations') }}">Back to list</a>
+{% endblock %}

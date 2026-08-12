@@ -10,6 +10,8 @@ def create_app():
     db.init_app(app)
     login_manager.init_app(app)
 
+    from app import models
+
     # import and register blueprints
     from app.main import main_bp
     from app.auth import auth_bp
@@ -19,6 +21,7 @@ def create_app():
     from app.inventory import inventory_bp
     from app.hospital_requests import hospital_requests_bp
     from app.distribution import distribution_bp
+    from app.blood_units import blood_units_bp
     
 
     app.register_blueprint(main_bp)
@@ -29,5 +32,6 @@ def create_app():
     app.register_blueprint(inventory_bp)
     app.register_blueprint(hospital_requests_bp)
     app.register_blueprint(distribution_bp)
+    app.register_blueprint(blood_units_bp)
 
     return app
