@@ -1,4 +1,3 @@
-//queries
 
 SELECT donation.donation_id, donation.DonationDate, donation.volume
 FROM Donation
