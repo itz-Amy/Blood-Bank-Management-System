@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}{{ title }}{% endblock %}
+{% block content %}
+<h1>{{ title }}</h1>
+<form method="POST">
+    {{ form.hidden_tag() }}
+    <p>{{ form.inventory_id.label }}<br>{{ form.inventory_id() }}</p>
+    <p>{{ form.bloodUnit_id.label }}<br>{{ form.bloodUnit_id() }}
+        {% for error in form.bloodUnit_id.errors %}<br><span style="color:red">{{ error }}</span>{% endfor %}
+    </p>
+    <p>{{ form.branch_id.label }}<br>{{ form.branch_id() }}</p>
+    <p>{{ form.status.label }}<br>{{ form.status() }}</p>
+    {{ form.submit() }}
+</form>
+<a href="{{ url_for('inventory.list_inventory') }}">Back to list</a>
+{% endblock %}

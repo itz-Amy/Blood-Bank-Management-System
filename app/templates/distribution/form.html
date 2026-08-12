@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %}{{ title }}{% endblock %}
+{% block content %}
+<h1>{{ title }}</h1>
+<form method="POST">
+    {{ form.hidden_tag() }}
+    <p>{{ form.Issuance_id.label }}<br>{{ form.Issuance_id() }}</p>
+    <p>{{ form.Request_id.label }}<br>{{ form.Request_id() }}
+        {% for error in form.Request_id.errors %}<br><span style="color:red">{{ error }}</span>{% endfor %}
+    </p>
+    <p>{{ form.StaffID.label }}<br>{{ form.StaffID() }}</p>
+    <p>{{ form.IssuedUnits.label }}<br>{{ form.IssuedUnits() }}</p>
+    <p>{{ form.IssueDate.label }}<br>{{ form.IssueDate() }}</p>
+    {{ form.submit() }}
+</form>
+<a href="{{ url_for('distribution.list_distributions') }}">Back to list</a>
+{% endblock %}

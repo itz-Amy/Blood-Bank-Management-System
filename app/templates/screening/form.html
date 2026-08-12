@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %}{{ title }}{% endblock %}
+{% block content %}
+<h1>{{ title }}</h1>
+<form method="POST">
+    {{ form.hidden_tag() }}
+    <p>{{ form.Screening_id.label }}<br>{{ form.Screening_id() }}</p>
+    <p>{{ form.BloodUnitID.label }}<br>{{ form.BloodUnitID() }}
+        {% for error in form.BloodUnitID.errors %}<br><span style="color:red">{{ error }}</span>{% endfor %}
+    </p>
+    <p>{{ form.StaffID.label }}<br>{{ form.StaffID() }}</p>
+    <p>{{ form.ScreeningDate.label }}<br>{{ form.ScreeningDate() }}</p>
+    <p>{{ form.OverallStatus.label }}<br>{{ form.OverallStatus() }}</p>
+    {{ form.submit() }}
+</form>
+<a href="{{ url_for('screening.list_screenings') }}">Back to list</a>
+{% endblock %}

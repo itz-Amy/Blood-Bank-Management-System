@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block title %}Update Status{% endblock %}
+{% block content %}
+<h1>Update Status — {{ req.Request_id }}</h1>
+<p>Hospital: {{ req.hospital.HospitalName }} | Blood Type: {{ req.blood_type.abo_group }} | Quantity: {{ req.Quantity }}</p>
+<form method="POST">
+    {{ form.hidden_tag() }}
+    <p>{{ form.Status.label }}<br>{{ form.Status() }}</p>
+    {{ form.submit() }}
+</form>
+<a href="{{ url_for('hospital_requests.list_requests') }}">Back to list</a>
+{% endblock %}

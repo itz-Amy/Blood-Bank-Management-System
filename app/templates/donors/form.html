@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+<h1>{{ title }}</h1>
+
+<form method="POST">
+    {{ form.hidden_tag() }}
+
+    <p>{{ form.donor_id.label }}<br>{{ form.donor_id() }}</p>
+    <p>{{ form.donorFName.label }}<br>{{ form.donorFName() }}</p>
+    <p>{{ form.donorLName.label }}<br>{{ form.donorLName() }}</p>
+    <p>{{ form.DOB.label }}<br>{{ form.DOB() }}</p>
+    <p>{{ form.gender.label }}<br>{{ form.gender() }}</p>
+    <p>{{ form.contact.label }}<br>{{ form.contact() }}</p>
+    <p>{{ form.email.label }}<br>{{ form.email() }}</p>
+    <p>{{ form.address.label }}<br>{{ form.address() }}</p>
+    <p>{{ form.weight.label }}<br>{{ form.weight() }}</p>
+    <p>{{ form.blood_type_id.label }}<br>{{ form.blood_type_id() }}</p>
+
+    {{ form.submit() }}
+</form>
+
+<a href="{{ url_for('donors.list_donors') }}">Back to list</a>
+{% endblock %}

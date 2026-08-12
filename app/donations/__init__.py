@@ -1,5 +1,5 @@
 from flask import Blueprint
 
-donations_bp = Blueprint('donation', __name__)
+donations_bp = Blueprint('donations', __name__)
 
 from app.donations import routes
