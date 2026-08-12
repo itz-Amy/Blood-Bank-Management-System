@@ -40,7 +40,7 @@ CREATE TABLE Donor(donor_id VARCHAR(5) PRIMARY KEY, donorFName VARCHAR(30), dono
 
 CREATE TABLE Deferral( deferralID VARCHAR(5) PRIMARY KEY, donorID VARCHAR(5) NOT NULL, deferral_date DATE NOT NULL, reason VARCHAR(100), FOREIGN KEY (donorID) REFERENCES Donor(donor_id) ); 
 
-CREATE TABLE TemporaryDeferral( tempDeferral_id VARCHAR (5) PRIMARY KEY, donorID VARCHAR (5) NOT NULL, endDate DATE NOT NULL, FOREIGN KEY (donorID) REFERENCES Donor(donor_id) ); 
+CREATE TABLE TemporaryDeferral( tempDeferral_id VARCHAR (5) PRIMARY KEY, deferralID VARCHAR (5) NOT NULL, endDate DATE NOT NULL, FOREIGN KEY (deferralID) REFERENCES Deferral(deferralID) ); 
 
 
 CREATE TABLE Staff(staff_id VARCHAR(5) PRIMARY KEY, staffFName VARCHAR(30), staffLName VARCHAR(30),
@@ -277,20 +277,21 @@ INSERT INTO Deferral (deferralID, donorID, deferral_date, reason) VALUES
 
 
 
-INSERT INTO TemporaryDeferral (tempDeferral_id, donorID, endDate) VALUES 
-('TD001', 'D002', '2025-04-01'), 
-('TD002', 'D004', '2025-05-15'), 
-('TD003', 'D006', '2025-06-10'), 
-('TD004', 'D008', '2025-07-01'), 
-('TD005', 'D010', '2025-07-20'), 
-('TD006', 'D012', '2025-08-05'), 
-('TD007', 'D014', '2025-09-01'), 
-('TD008', 'D016', '2025-09-25'), 
-('TD009', 'D018', '2025-10-10'), 
-('TD010', 'D020', '2025-11-05'), 
-('TD011', 'D022', '2025-11-30'), 
-('TD012', 'D024', '2025-12-15'); 
-
+INSERT INTO TemporaryDeferral
+    (tempDeferral_id, deferralID, endDate)
+VALUES
+    ('TD001', 'DF007', '2025-04-01'),
+    ('TD002', 'DF008', '2025-05-15'),
+    ('TD003', 'DF009', '2025-06-10'),
+    ('TD004', 'DF010', '2025-07-01'),
+    ('TD005', 'DF011', '2025-07-20'),
+    ('TD006', 'DF012', '2025-08-05'),
+    ('TD007', 'DF013', '2025-09-01'),
+    ('TD008', 'DF014', '2025-09-25'),
+    ('TD009', 'DF015', '2025-10-10'),
+    ('TD010', 'DF016', '2025-11-05'),
+    ('TD011', 'DF017', '2025-11-30'),
+    ('TD012', 'DF018', '2025-12-15');
 
 INSERT INTO Staff (staff_id, staffFName, staffLName, staffType, branchID, role_id) VALUES ('S001', 'Daniel', 'Mensah', 'Full-Time', 'B001', 'R005'), 
 ('S002', 'Ama', 'Boateng', 'Full-Time', 'B001', 'R001'), 
