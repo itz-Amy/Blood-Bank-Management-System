@@ -111,6 +111,15 @@ CREATE TABLE Compatibility (
 );
 
 
+CREATE TABLE User (
+    user_id VARCHAR(5) PRIMARY KEY,
+    password_hash VARCHAR(255) NOT NULL,
+    user_type VARCHAR(10) NOT NULL CHECK (user_type IN ('staff', 'hospital')),
+    staff_id VARCHAR(5),
+    hospital_id VARCHAR(5),
+    FOREIGN KEY (staff_id) REFERENCES Staff(staff_id),
+    FOREIGN KEY (hospital_id) REFERENCES Hospital(Hospital_id)
+);
 
 
 
