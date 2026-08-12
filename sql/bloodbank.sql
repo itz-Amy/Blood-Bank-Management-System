@@ -596,14 +596,14 @@ DELIMITER //
 
 CREATE FUNCTION fn_HasActiveDeferral(p_donor_id VARCHAR(5))
 RETURNS TINYINT
-DETERMINISTIC
+NOT DETERMINISTIC
 READS SQL DATA
 BEGIN
     DECLARE v_count INT DEFAULT 0; 
 
     SELECT COUNT(*) INTO v_count
     FROM Deferral df
-    LEFT JOIN TemporaryDeferral td ON df.deferralID = td.Deferral_id
+    LEFT JOIN TemporaryDeferral td ON df.deferralID = td.DeferralId
     WHERE df.donorID = p_donor_id
       AND (td.tempDeferral_id IS NULL OR td.endDate > CURDATE());
 
