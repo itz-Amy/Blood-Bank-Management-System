@@ -56,7 +56,7 @@ ON bloodbank.Issuance
 TO blood_bank_manager;
 
 GRANT SELECT
-ON bloodbank.IssuedBloodUnits
+ON bloodbank.IssuedBloodUnit
 TO blood_bank_manager;
 
 
@@ -218,19 +218,3 @@ ON bloodbank.IssuedBloodUnit
 TO hospital_rep;
 
 
-
-
-
-SET ROLE phlebotomist;
-
-SELECT * FROM bloodbank.Donor;
-
-
-
-
-
-SET ROLE phlebotomist;
-
-UPDATE bloodbank.Hospital
-SET HospitalName = 'Test'
-WHERE HospitalNo = 999999;
