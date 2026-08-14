@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+
+<h1>{{ title }}</h1>
+
+<form method="POST">
+
+    {{ form.hidden_tag() }}
+
+    <p>
+        {{ form.Screening_id.label }}<br>
+        {{ form.Screening_id() }}
+
+        {% for error in form.Screening_id.errors %}
+            <br>
+            <span style="color:red">{{ error }}</span>
+        {% endfor %}
+    </p>
+
+    <p>
+        {{ form.Test_id.label }}<br>
+        {{ form.Test_id() }}
+
+        {% for error in form.Test_id.errors %}
+            <br>
+            <span style="color:red">{{ error }}</span>
+        {% endfor %}
+    </p>
+
+    <p>
+        {{ form.Result.label }}<br>
+        {{ form.Result() }}
+
+        {% for error in form.Result.errors %}
+            <br>
+            <span style="color:red">{{ error }}</span>
+        {% endfor %}
+    </p>
+
+    {{ form.submit() }}
+
+</form>
+
+<a href="{{ url_for('test_results.list_test_results') }}">
+    Back to Test Results
+</a>
+
+{% endblock %}
+

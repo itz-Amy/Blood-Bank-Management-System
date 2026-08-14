@@ -631,7 +631,7 @@ JOIN Inventory inv ON inv.bloodUnit_id = bu.bloodUnit_id
 JOIN BloodType bt ON bu.blood_type_id = bt.blood_type_id
 JOIN Branch br ON inv.branch_id = br.branch_id
 WHERE inv.status = 'Available'
-  AND bu.expiry_date > CURDATE() AND r.Status = 'Pending';
+  AND bu.expiry_date > CURDATE();
 
 
 CREATE VIEW vw_AvailableInventory AS
@@ -930,54 +930,6 @@ DELIMITER ;
 
 
 
-
-DELIMITER //
-
-CREATE PROCEDURE sp_RegisterDonation(
-    IN p_donor_id VARCHAR(5),
-    IN p_volume DECIMAL(5,2),
-    IN p_branch_id VARCHAR(5)
-)
-BEGIN
-    DECLARE v_donation_id VARCHAR(5);
-    DECLARE v_unit_id VARCHAR(5);
-
-    SET v_donation_id = CONCAT('DN', LPAD((SELECT COUNT(*)+1  FROM Donation), 3, '0'));
-    SET v_unit_id = CONCAT('BU', LPAD((SELECT COUNT(*)+1 FROM BloodUnit), 3, '0'));
-
-    INSERT INTO Donation (donation_id, donor_id, volume, DonationDate, branch_id)
-    VALUES (v_donation_id, p_donor_id, p_volume, CURDATE(), p_branch_id);
-
-    INSERT INTO BloodUnit (bloodUnit_id, donation_id, procurement_date, expiry_date, blood_vol)
-    VALUES (v_unit_id, v_donation_id, CURDATE(), DATE_ADD(CURDATE(), INTERVAL 42 DAY), p_volume);
-END //
-
-DELIMITER ;
-
-
-
-DELIMITER //
-
-CREATE PROCEDURE sp_RecordTestResult(
-    IN p_screening_id VARCHAR(5),
-    IN p_test_id VARCHAR(5),
-    IN p_result VARCHAR(10)
-)
-BEGIN
-    DECLARE v_result_id VARCHAR(5);
-
-    SET v_result_id = CONCAT('TR', LPAD((SELECT COUNT(*) FROM TestResult) + 1, 3, '0'));
-
-    INSERT INTO TestResult (TestResultID, Screening_id, Test_id, Result)
-    VALUES (v_result_id, p_screening_id, p_test_id, p_result);
-END //
-
-DELIMITER ;
-
-
-
-
-
 DELIMITER //
 
 CREATE PROCEDURE sp_IssueBloodUnit(
@@ -986,17 +938,118 @@ CREATE PROCEDURE sp_IssueBloodUnit(
     IN p_staff_id VARCHAR(5)
 )
 BEGIN
-
     DECLARE v_issuance_id VARCHAR(5);
+    DECLARE v_request_quantity INT;
+    DECLARE v_issued_quantity DECIMAL(10,2);
+    DECLARE v_inventory_status VARCHAR(20);
+    DECLARE v_request_abo VARCHAR(10);
+    DECLARE v_request_rh VARCHAR(20);
+    DECLARE v_unit_abo VARCHAR(10);
+    DECLARE v_unit_rh VARCHAR(20);
+
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+        ROLLBACK;
+        RESIGNAL;
+    END;
+
     START TRANSACTION;
 
-    SET v_issuance_id = CONCAT( 'IS', LPAD((SELECT COUNT(*) + 1 FROM Issuance), 3, '0'));
+    SELECT
+        r.Quantity,
+        bt.abo_group,
+        bt.rh_factor
+    INTO
+        v_request_quantity,
+        v_request_abo,
+        v_request_rh
+    FROM Request r
+    JOIN BloodType bt
+        ON r.BloodType = bt.blood_type_id
+    WHERE r.Request_id = p_request_id;
 
-    INSERT INTO Issuance (Issuance_id,Request_id,StaffID,IssueDate)
-    VALUES ( v_issuance_id, p_request_id,p_staff_id,CURDATE() );
+    IF v_request_quantity IS NULL THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'Request does not exist';
+    END IF;
 
-    INSERT INTO IssuedBloodUnit (Issuance_id,bloodUnit_id)
-    VALUES ( v_issuance_id, p_bloodUnit_id);
+    SELECT COALESCE(SUM(IssuedUnits), 0)
+    INTO v_issued_quantity
+    FROM Issuance
+    WHERE Request_id = p_request_id;
+
+    IF v_issued_quantity >= v_request_quantity THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'Request quantity has already been fulfilled';
+    END IF;
+
+    SELECT
+        inv.status,
+        bt.abo_group,
+        bt.rh_factor
+    INTO
+        v_inventory_status,
+        v_unit_abo,
+        v_unit_rh
+    FROM Inventory inv
+    JOIN BloodUnit bu
+        ON inv.bloodUnit_id = bu.bloodUnit_id
+    JOIN BloodType bt
+        ON bu.blood_type_id = bt.blood_type_id
+    WHERE inv.bloodUnit_id = p_bloodUnit_id;
+
+    IF v_inventory_status IS NULL THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'Blood unit does not exist';
+    END IF;
+
+    IF v_inventory_status <> 'Available' THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'Blood unit is not currently available';
+    END IF;
+
+    IF NOT (
+        (v_request_abo = 'O' AND v_unit_abo = 'O')
+        
+        OR (v_request_abo = 'A' AND v_unit_abo IN ('A', 'O'))
+        
+        OR (v_request_abo = 'B' AND v_unit_abo IN ('B', 'O'))
+        
+        OR (v_request_abo = 'AB' AND v_unit_abo IN ('A', 'B', 'AB', 'O'))
+    )
+    OR NOT (
+        (v_request_rh = 'Negative' AND v_unit_rh = 'Negative')
+        
+        OR (v_request_rh = 'Positive')
+    )
+    THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'Blood type incompatible with request';
+    END IF;
+
+    SELECT CONCAT(
+        'IS',
+        LPAD(
+            COALESCE(
+                MAX(CAST(SUBSTRING(Issuance_id, 3) AS UNSIGNED)),
+                0
+            ) + 1,
+            3,
+            '0'
+        )
+    )
+    INTO v_issuance_id
+    FROM Issuance;
+
+    INSERT INTO Issuance
+        (Issuance_id, IssuedUnits, Request_id, StaffID, IssueDate)
+    VALUES
+        (v_issuance_id, 1.00, p_request_id, p_staff_id, CURDATE());
+
+    INSERT INTO IssuedBloodUnit
+        (Issuance_id, bloodUnit_id)
+    VALUES
+        (v_issuance_id, p_bloodUnit_id);
 
     UPDATE Inventory
     SET status = 'Issued'
@@ -1006,9 +1059,6 @@ BEGIN
 
 END //
 
-
-
-
-
+DELIMITER ;
 
 

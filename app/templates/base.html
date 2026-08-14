@@ -12,6 +12,11 @@
             <a href="{{ url_for('donations.list_donations') }}">Donations</a>
             <a href="{{ url_for('blood_units.list_blood_units') }}">Blood Units</a>
             <a href="{{ url_for('screening.list_screenings') }}">Screening</a>
+            {% if current_user.staff and current_user.staff.role_id == 'R002' %}
+                <a href="{{ url_for('test_results.list_test_results') }}">
+                    Test Results
+                </a>
+            {% endif %}
             <a href="{{ url_for('inventory.list_inventory') }}">Inventory</a>
             <a href="{{ url_for('hospital_requests.list_requests') }}">Requests</a>
             <a href="{{ url_for('distribution.list_distributions') }}">Distribution</a>

@@ -38,10 +38,14 @@ def create_distribution():
         for req in approved_requests
     ]
 
-    selected_request_id = request.form.get("Request_id")
+    selected_request_id = request.args.get("Request_id") or request.form.get(
+        "Request_id"
+    )
 
     if not selected_request_id and form.Request_id.choices:
         selected_request_id = form.Request_id.choices[0][0]
+
+    form.Request_id.data = selected_request_id
 
     print("SELECTED REQUEST:", selected_request_id)
     compatible_units = []
@@ -104,7 +108,7 @@ def create_distribution():
             )
 
         issuance = Issuance(
-            Issuance_id=form.Issuance_id.data,
+            Issuance_id=1,
             Request_id=req.Request_id,
             StaffID=current_user.staff_id,
             IssuedUnits=form.IssuedUnits.data,
@@ -135,15 +139,6 @@ def create_distribution():
                     "Inventory status update failed", params=None, orig=None
                 )
 
-            issued_after = (
-                db.session.query(func.coalesce(func.sum(Issuance.IssuedUnits), 0))
-                .filter(Issuance.Request_id == req.Request_id)
-                .scalar()
-            )
-            # Keep current status model authoritative while reflecting completion state.
-            req.Status = (
-                "Rejected" if float(issued_after) >= req.Quantity else "Approved"
-            )
 
             db.session.commit()
             flash("Blood issued successfully.", "success")

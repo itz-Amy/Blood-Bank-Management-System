@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block title %}Test Results{% endblock %}
+
+{% block content %}
+
+<h1>Test Results</h1>
+
+<a href="{{ url_for('test_results.create_test_result') }}" class="btn">
+    + Record Test Result
+</a>
+
+<table>
+    <tr>
+        <th>Result ID</th>
+        <th>Screening ID</th>
+        <th>Test ID</th>
+        <th>Result</th>
+    </tr>
+
+    {% for tr in test_results %}
+    <tr>
+        <td>{{ tr.TestResultID }}</td>
+        <td>{{ tr.Screening_id }}</td>
+        <td>{{ tr.Test_id }}</td>
+        <td>{{ tr.Result }}</td>
+    </tr>
+    {% endfor %}
+
+</table>
+
+{% endblock %}

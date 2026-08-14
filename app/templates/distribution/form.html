@@ -17,8 +17,8 @@
 
     <p>
         {{ form.Request_id.label }}<br>
-        {{ form.Request_id(onchange="this.form.submit();") }}
-        {% for error in form.Request_id.errors %}
+        {{ form.Request_id(onchange="window.location.href='?Request_id=' + this.value;") }} {% for error in
+        form.Request_id.errors %}
         <br><span style="color:red">{{ error }}</span>
         {% endfor %}
     </p>

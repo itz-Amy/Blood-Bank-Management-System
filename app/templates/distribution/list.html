@@ -4,7 +4,14 @@
 <h1>Distribution</h1>
 <a href="{{ url_for('distribution.create_distribution') }}" class="btn">+ Issue Blood</a>
 <table>
-    <tr><th>ID</th><th>Request</th><th>Hospital</th><th>Staff</th><th>Units</th><th>Issue Date</th></tr>
+    <tr>
+        <th>ID</th>
+        <th>Request</th>
+        <th>Hospital</th>
+        <th>Staff</th>
+        <th>Units</th>
+        <th>Issue Date</th>
+    </tr>
     {% for i in issuances %}
     <tr>
         <td>{{ i.Issuance_id }}</td>

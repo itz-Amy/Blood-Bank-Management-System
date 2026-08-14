@@ -1,4 +1,3 @@
-
 SELECT donation.donation_id, donation.DonationDate, donation.volume
 FROM Donation
 JOIN Donor ON donation.donor_id = donor.donor_id

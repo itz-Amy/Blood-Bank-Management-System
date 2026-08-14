@@ -27,6 +27,7 @@
         <th>DOB</th>
         <th>Gender</th>
         <th>Contact</th>
+        <th>Email</th>
         <th>Blood Type</th>
         <th>Actions</th>
     </tr>
@@ -37,6 +38,7 @@
         <td>{{ donor.DOB }}</td>
         <td>{{ donor.gender }}</td>
         <td>{{ donor.contact }}</td>
+        <td>{{ donor.email or '—' }}</td>
         <td>{{ donor.blood_type.abo_group }}{{ '+' if donor.blood_type.rh_factor == 'Positive' else '-' }}</td>
         <td>
             <a href="{{ url_for('donors.edit_donor', donor_id=donor.donor_id) }}">Edit</a>
