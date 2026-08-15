@@ -1,55 +1,69 @@
 {% extends "base.html" %}
+
 {% block title %}{{ title }}{% endblock %}
 
 {% block content %}
+
 <h1>{{ title }}</h1>
 
 <form method="POST">
+
     {{ form.hidden_tag() }}
 
     <p>
-        {{ form.Issuance_id.label }}<br>
-        {{ form.Issuance_id() }}
-        {% for error in form.Issuance_id.errors %}
-        <br><span style="color:red">{{ error }}</span>
-        {% endfor %}
-    </p>
-
-    <p>
         {{ form.Request_id.label }}<br>
-        {{ form.Request_id(onchange="window.location.href='?Request_id=' + this.value;") }} {% for error in
-        form.Request_id.errors %}
-        <br><span style="color:red">{{ error }}</span>
+        {{ form.Request_id(
+            onchange="window.location.href='?Request_id=' + this.value;"
+        ) }}
+
+        {% for error in form.Request_id.errors %}
+            <br>
+            <span style="color:red">{{ error }}</span>
         {% endfor %}
     </p>
 
+
     <p>
-        {{ form.BloodUnitID.label }}<br>
-        {{ form.BloodUnitID() }}
-        {% for error in form.BloodUnitID.errors %}
-        <br><span style="color:red">{{ error }}</span>
+        {{ form.BloodTypeID.label }}<br>
+        {{ form.BloodTypeID() }}
+
+        {% for error in form.BloodTypeID.errors %}
+            <br>
+            <span style="color:red">{{ error }}</span>
         {% endfor %}
     </p>
 
+
     <p>
-        {{ form.IssuedUnits.label }}<br>
-        {{ form.IssuedUnits() }}
-        {% for error in form.IssuedUnits.errors %}
-        <br><span style="color:red">{{ error }}</span>
+        {{ form.Quantity.label }}<br>
+        {{ form.Quantity(min=1) }}
+
+        {% for error in form.Quantity.errors %}
+            <br>
+            <span style="color:red">{{ error }}</span>
         {% endfor %}
     </p>
+
 
     <p>
         {{ form.IssueDate.label }}<br>
         {{ form.IssueDate() }}
+
         {% for error in form.IssueDate.errors %}
-        <br><span style="color:red">{{ error }}</span>
+            <br>
+            <span style="color:red">{{ error }}</span>
         {% endfor %}
     </p>
 
+
     {{ form.submit() }}
+
 </form>
 
-<a href="{{ url_for('distribution.list_distributions') }}">Back to list</a>
+<br>
+
+<a href="{{ url_for('distribution.list_distributions') }}">
+    Back to list
+</a>
 
 {% endblock %}

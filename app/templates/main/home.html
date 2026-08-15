@@ -1,64 +1,310 @@
 {% extends "base.html" %}
 
-{% block title %}Home{% endblock %}
+{% block title %}Dashboard{% endblock %}
 
 {% block content %}
-<div class="hero">
-    <h1>Welcome back, {{ user.user_id }}</h1>
-    <p class="subtitle">Blood Bank Management System — {{ user.user_type|capitalize }} Portal</p>
+
+<div class="dashboard-header">
+    <div>
+        <h1>
+    Welcome back,
+    {% if user.staff %}
+        {{ user.staff.staffFName }} {{ user.staff.staffLName }}
+    {% elif user.hospital %}
+        {{ user.hospital.HospitalName }}
+    {% else %}
+        {{ user.user_id }}
+    {% endif %}
+    👋
+        </h1>
+
+        {% if role_name == 'phlebotomist' %}
+            <p>Here's an overview of your donor and donation activities.</p>
+
+        {% elif role_name == 'lab_tech' %}
+            <p>Here's an overview of screening and laboratory activities.</p>
+
+        {% elif role_name == 'blood_bank_manager' %}
+            <p>Here's an overview of the blood bank.</p>
+
+        {% elif role_name == 'hospital_rep' %}
+            <p>Here's an overview of your hospital's blood requests.</p>
+        {% endif %}
+    </div>
+
+    <div class="role-badge">
+        {{ role_name|replace('_', ' ')|title }}
+    </div>
 </div>
 
-{% if user.user_type == 'staff' %}
-<div class="dashboard-grid">
-    <a href="{{ url_for('donors.list_donors') }}" class="dashboard-card">
-        <span class="card-icon">🩸</span>
-        <h3>Donors</h3>
-        <p>Manage donor records</p>
-    </a>
-    <a href="{{ url_for('donations.list_donations') }}" class="dashboard-card">
-        <span class="card-icon">📋</span>
-        <h3>Donations</h3>
-        <p>Record and track donations</p>
-    </a>
-    <a href="{{ url_for('blood_units.list_blood_units') }}" class="dashboard-card">
-        <span class="card-icon">🧪</span>
-        <h3>Blood Units</h3>
-        <p>View collected units</p>
-    </a>
-    <a href="{{ url_for('screening.list_screenings') }}" class="dashboard-card">
-        <span class="card-icon">🔬</span>
-        <h3>Screening</h3>
-        <p>Test and clear blood units</p>
-    </a>
-    <a href="{{ url_for('inventory.list_inventory') }}" class="dashboard-card">
-        <span class="card-icon">📦</span>
-        <h3>Inventory</h3>
-        <p>Track stock by branch</p>
-    </a>
-    <a href="{{ url_for('hospital_requests.list_requests') }}" class="dashboard-card">
-        <span class="card-icon">🏥</span>
-        <h3>Hospital Requests</h3>
-        <p>Review incoming requests</p>
-    </a>
-    <a href="{{ url_for('distribution.list_distributions') }}" class="dashboard-card">
-        <span class="card-icon">🚚</span>
-        <h3>Distribution</h3>
-        <p>Issue blood to hospitals</p>
-    </a>
+
+<!-- ==================== PHLEBOTOMIST ==================== -->
+
+{% if role_name == 'phlebotomist' %}
+
+<div class="stats-grid">
+
+    <div class="stat-card">
+        <div class="stat-icon">🩸</div>
+        <div>
+            <h2>{{ stats.donors }}</h2>
+            <p>Total Donors</p>
+        </div>
+    </div>
+
+    <div class="stat-card">
+        <div class="stat-icon">📋</div>
+        <div>
+            <h2>{{ stats.donations }}</h2>
+            <p>Total Donations</p>
+        </div>
+    </div>
+
+    <div class="stat-card">
+        <div class="stat-icon">⚠️</div>
+        <div>
+            <h2>{{ stats.deferrals }}</h2>
+            <p>Active Deferrals</p>
+        </div>
+    </div>
+    
+    <div class="stat-card">
+        <div class="stat-icon">✅</div>
+        <div class="stat-info">
+            <h3>{{ stats.eligible_donors }}</h3>
+            <p>Eligible Donors</p>
+        </div>
+    </div>
+
 </div>
 
-{% elif user.user_type == 'hospital' %}
-<div class="dashboard-grid">
-    <a href="{{ url_for('hospital_requests.list_requests') }}" class="dashboard-card">
-        <span class="card-icon">🏥</span>
-        <h3>My Requests</h3>
-        <p>View your submitted requests</p>
-    </a>
-    <a href="{{ url_for('hospital_requests.create_request') }}" class="dashboard-card">
-        <span class="card-icon">➕</span>
-        <h3>New Request</h3>
-        <p>Submit a new blood request</p>
-    </a>
+<div class="quick-actions">
+
+    <h2>Quick Actions</h2>
+
+    <div class="action-grid">
+
+        <a href="{{ url_for('donors.list_donors') }}" class="action-card">
+            <span>🩸</span>
+            <div>
+                <strong>Donors</strong>
+                <small>Manage donor records</small>
+            </div>
+        </a>
+
+        <a href="{{ url_for('donations.list_donations') }}" class="action-card">
+            <span>📋</span>
+            <div>
+                <strong>Donations</strong>
+                <small>Record donations</small>
+            </div>
+        </a>
+
+    </div>
+
 </div>
+
+
+<!-- ==================== LAB TECH ==================== -->
+
+{% elif role_name == 'lab_tech' %}
+
+<div class="stats-grid">
+
+    <div class="stat-card">
+        <div class="stat-icon">🔬</div>
+        <div>
+            <h2>{{ stats.pending_screenings }}</h2>
+            <p>Pending Screenings</p>
+        </div>
+    </div>
+
+    <div class="stat-card">
+        <div class="stat-icon">🧪</div>
+        <div>
+            <h2>{{ stats.test_results }}</h2>
+            <p>Test Results</p>
+        </div>
+    </div>
+
+    <div class="stat-card">
+        <div class="stat-icon">🩸</div>
+        <div>
+            <h2>{{ stats.blood_units }}</h2>
+            <p>Blood Units</p>
+        </div>
+    </div>
+
+</div>
+
+<div class="quick-actions">
+
+    <h2>Quick Actions</h2>
+
+    <div class="action-grid">
+
+        <a href="{{ url_for('screening.list_screenings') }}" class="action-card">
+            <span>🔬</span>
+            <div>
+                <strong>Screening</strong>
+                <small>View blood screenings</small>
+            </div>
+        </a>
+
+        <a href="{{ url_for('test_results.list_test_results') }}" class="action-card">
+            <span>🧪</span>
+            <div>
+                <strong>Test Results</strong>
+                <small>Record test results</small>
+            </div>
+        </a>
+
+        <a href="{{ url_for('blood_units.list_blood_units') }}" class="action-card">
+            <span>🩸</span>
+            <div>
+                <strong>Blood Units</strong>
+                <small>View blood units</small>
+            </div>
+        </a>
+
+        <a href="{{ url_for('inventory.list_inventory') }}" class="action-card">
+            <span>📦</span>
+            <div>
+                <strong>Inventory</strong>
+                <small>View inventory</small>
+            </div>
+        </a>
+
+    </div>
+
+</div>
+
+
+<!-- ==================== BLOOD BANK MANAGER ==================== -->
+
+{% elif role_name == 'blood_bank_manager' %}
+
+<div class="stats-grid">
+
+    <div class="stat-card">
+        <div class="stat-icon">🩸</div>
+        <div>
+            <h2>{{ stats.donors }}</h2>
+            <p>Total Donors</p>
+        </div>
+    </div>
+
+    <div class="stat-card">
+        <div class="stat-icon">📦</div>
+        <div>
+            <h2>{{ stats.available_units }}</h2>
+            <p>Available Blood Units</p>
+        </div>
+    </div>
+
+    <div class="stat-card">
+        <div class="stat-icon">🏥</div>
+        <div>
+            <h2>{{ stats.pending_requests }}</h2>
+            <p>Pending Requests</p>
+        </div>
+    </div>
+
+    <div class="stat-card">
+        <div class="stat-icon">🏨</div>
+        <div>
+            <h2>{{ stats.hospitals }}</h2>
+            <p>Hospitals</p>
+        </div>
+    </div>
+
+</div>
+
+<div class="quick-actions">
+
+    <h2>Quick Actions</h2>
+
+    <div class="action-grid">
+
+        <a href="{{ url_for('donors.list_donors') }}" class="action-card">
+            <span>🩸</span>
+            <div>
+                <strong>Donors</strong>
+                <small>Manage donor records</small>
+            </div>
+        </a>
+
+        <a href="{{ url_for('inventory.list_inventory') }}" class="action-card">
+            <span>📦</span>
+            <div>
+                <strong>Inventory</strong>
+                <small>Manage blood inventory</small>
+            </div>
+        </a>
+
+        <a href="{{ url_for('hospital_requests.list_requests') }}" class="action-card">
+            <span>🏥</span>
+            <div>
+                <strong>Requests</strong>
+                <small>Review hospital requests</small>
+            </div>
+        </a>
+
+        <a href="{{ url_for('distribution.list_distributions') }}" class="action-card">
+            <span>🚚</span>
+            <div>
+                <strong>Distribution</strong>
+                <small>Manage blood distribution</small>
+            </div>
+        </a>
+
+    </div>
+
+</div>
+
+
+<!-- ==================== HOSPITAL ==================== -->
+
+{% elif role_name == 'hospital_rep' %}
+
+<div class="stats-grid">
+
+    <div class="stat-card">
+        <div class="stat-icon">⏳</div>
+        <div>
+            <h2>{{ stats.pending_requests }}</h2>
+            <p>Pending Requests</p>
+        </div>
+    </div>
+
+</div>
+
+<div class="quick-actions">
+
+    <h2>Quick Actions</h2>
+
+    <div class="action-grid">
+
+        <a href="{{ url_for('hospital_requests.create_request') }}" class="action-card">
+            <span>➕</span>
+            <div>
+                <strong>New Request</strong>
+                <small>Request blood units</small>
+            </div>
+        </a>
+
+        <a href="{{ url_for('hospital_requests.list_requests') }}" class="action-card">
+            <span>🏥</span>
+            <div>
+                <strong>My Requests</strong>
+                <small>View submitted requests</small>
+            </div>
+        </a>
+
+    </div>
+
+</div>
+
 {% endif %}
+
 {% endblock %}

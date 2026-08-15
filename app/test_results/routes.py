@@ -6,6 +6,7 @@ from sqlalchemy.exc import OperationalError, IntegrityError
 from app.test_results import test_results_bp
 from app.test_results.forms import TestResultForm
 from app.extensions import db
+from app.models.screening import Test
 
 
 @test_results_bp.route('/test-results')
@@ -15,7 +16,7 @@ def list_test_results():
     if current_user.user_type != 'staff':
         abort(403)
 
-    if not current_user.staff or current_user.staff.role_id != 'R002':
+    if not current_user.staff:
         abort(403)
 
     result = db.session.execute(
@@ -23,9 +24,11 @@ def list_test_results():
             SELECT
                 tr.TestResultID,
                 tr.Screening_id,
-                tr.Test_id,
+                t.TestName,
                 tr.Result
             FROM TestResult tr
+            JOIN Test t
+                ON tr.Test_id = t.Test_id
             ORDER BY tr.TestResultID
         """)
     )
@@ -37,7 +40,6 @@ def list_test_results():
         test_results=test_results
     )
 
-
 @test_results_bp.route('/test-results/new', methods=['GET', 'POST'])
 @login_required
 def create_test_result():
@@ -45,10 +47,18 @@ def create_test_result():
     if current_user.user_type != 'staff':
         abort(403)
 
-    if not current_user.staff or current_user.staff.role_id != 'R002':
+    if not current_user.staff:
         abort(403)
 
     form = TestResultForm()
+
+    # Populate Test dropdown
+    tests = Test.query.order_by(Test.TestName).all()
+
+    form.Test_id.choices = [
+        (test.Test_id, test.TestName)
+        for test in tests
+    ]
 
     if form.validate_on_submit():
 
@@ -70,7 +80,10 @@ def create_test_result():
 
             db.session.commit()
 
-            flash('Test result recorded successfully.', 'success')
+            flash(
+                'Test result recorded successfully.',
+                'success'
+            )
 
             return redirect(
                 url_for('test_results.list_test_results')
@@ -81,7 +94,8 @@ def create_test_result():
             db.session.rollback()
 
             flash(
-                f'Could not save test result: {str(e.orig)}',
+                f'Could not save test result: '
+                f'{str(e.orig) if getattr(e, "orig", None) else str(e)}',
                 'danger'
             )
 

@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block title %}Access Denied{% endblock %}
+
+{% block content %}
+
+<div class="error-page">
+
+    <div class="error-icon">🔒</div>
+
+    <h1>Access Denied</h1>
+
+    <p>
+        You don't have permission to perform this action.
+    </p>
+
+    <p class="error-help">
+        Your account's role does not have the required privileges.
+    </p>
+
+    <a href="{{ url_for('main.home') }}" class="error-button">
+        ← Back to Dashboard
+    </a>
+
+</div>
+
+{% endblock %}

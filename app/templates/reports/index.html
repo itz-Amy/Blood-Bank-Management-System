@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block title %}Reports{% endblock %}
+
+{% block content %}
+
+<h1>Reports</h1>
+
+<p>
+    <a href="{{ url_for('reports.export_inventory') }}">
+        Export Inventory to Excel
+    </a>
+</p>
+
+<p>
+    <a href="{{ url_for('reports.export_requests') }}">
+        Export Requests to Excel
+    </a>
+</p>
+
+<p>
+    <a href="{{ url_for('reports.export_issuances') }}">
+        Export Issuances to Excel
+    </a>
+</p>
+
+{% endblock %}

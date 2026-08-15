@@ -1,9 +1,11 @@
-from flask import Flask, abort
+from flask import Flask, abort, render_template
 from app.extensions import db, login_manager
 from app.config import Config
 from flask_login import current_user
 from sqlalchemy import text
+from sqlalchemy.exc import OperationalError
 from app.auth.db_roles import ROLE_MAP, HOSPITAL_ROLE
+from app.auth.db_roles import ROLE_MAP
 
 def create_app():
     app = Flask(__name__)
@@ -11,6 +13,23 @@ def create_app():
 
     db.init_app(app)
     login_manager.init_app(app)
+    app.jinja_env.globals['ROLE_MAP'] = ROLE_MAP
+
+    @app.errorhandler(403)
+    def forbidden(error):
+        return render_template('errors/403.html'), 403
+
+    @app.errorhandler(OperationalError)
+    def handle_database_permission_error(error):
+        message = str(error.orig)
+
+        if "command denied" in message:
+            db.session.rollback()
+            return render_template('errors/403.html'), 403
+
+        db.session.rollback()
+        return render_template('errors/500.html'), 500
+
 
     from app import models
 
@@ -46,6 +65,8 @@ def create_app():
     from app.distribution import distribution_bp
     from app.blood_units import blood_units_bp
     from app.test_results import test_results_bp
+    from app.reports import reports_bp
+
     
 
     app.register_blueprint(main_bp)
@@ -58,5 +79,6 @@ def create_app():
     app.register_blueprint(distribution_bp)
     app.register_blueprint(blood_units_bp)
     app.register_blueprint(test_results_bp)
+    app.register_blueprint(reports_bp)
 
     return app

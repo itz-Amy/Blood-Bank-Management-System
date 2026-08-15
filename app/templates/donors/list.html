@@ -3,24 +3,84 @@
 {% block title %}Donors{% endblock %}
 
 {% block content %}
+
 <h1>Donors</h1>
 
 <a href="{{ url_for('donors.create_donor') }}">+ New Donor</a>
 
+<!-- ========================= -->
+<!-- SEARCH AND FILTERS -->
+<!-- ========================= -->
+
 <form method="GET">
-    <input type="text" name="search" placeholder="Search by name" value="{{ request.args.get('search', '') }}">
+
+    <!-- Search -->
+    <input
+        type="text"
+        name="search"
+        placeholder="Search by ID or name"
+        value="{{ request.args.get('search', '') }}"
+    >
+
+    <!-- Blood Type -->
     <select name="blood_type">
+
         <option value="">All Blood Types</option>
+
         {% for bt in blood_types %}
-        <option value="{{ bt.blood_type_id }}" {% if request.args.get('blood_type') == bt.blood_type_id %}selected{% endif %}>
+
+        <option
+            value="{{ bt.blood_type_id }}"
+            {% if request.args.get('blood_type') == bt.blood_type_id %}
+                selected
+            {% endif %}
+        >
             {{ bt.abo_group }}{{ '+' if bt.rh_factor == 'Positive' else '-' }}
         </option>
+
         {% endfor %}
+
     </select>
+
+    <!-- Eligibility -->
+    <select name="eligibility">
+
+        <option
+            value=""
+            {% if eligibility_filter == '' %}
+                selected
+            {% endif %}
+        >
+            All Donors
+        </option>
+
+        <option
+            value="eligible"
+            {% if eligibility_filter == 'eligible' %}
+                selected
+            {% endif %}
+        >
+            Eligible Donors
+        </option>
+
+    </select>
+
     <button type="submit">Filter</button>
+
+    <!-- Clear Filters -->
+    <a href="{{ url_for('donors.list_donors') }}">
+        Clear
+    </a>
+
 </form>
 
+
+<!-- ========================= -->
+<!-- DONOR TABLE -->
+<!-- ========================= -->
+
 <table border="1" cellpadding="6">
+
     <tr>
         <th>ID</th>
         <th>Name</th>
@@ -31,22 +91,77 @@
         <th>Blood Type</th>
         <th>Actions</th>
     </tr>
+
     {% for donor in donors %}
+
     <tr>
-        <td>{{ donor.donor_id }}</td>
-        <td>{{ donor.donorFName }} {{ donor.donorLName }}</td>
-        <td>{{ donor.DOB }}</td>
-        <td>{{ donor.gender }}</td>
-        <td>{{ donor.contact }}</td>
-        <td>{{ donor.email or '—' }}</td>
-        <td>{{ donor.blood_type.abo_group }}{{ '+' if donor.blood_type.rh_factor == 'Positive' else '-' }}</td>
+
         <td>
-            <a href="{{ url_for('donors.edit_donor', donor_id=donor.donor_id) }}">Edit</a>
-            <form method="POST" action="{{ url_for('donors.delete_donor', donor_id=donor.donor_id) }}" style="display:inline">
-                <button type="submit" onclick="return confirm('Delete this donor?')">Delete</button>
-            </form>
+            {{ donor.donor_id }}
         </td>
+
+        <td>
+            {{ donor.donorFName }} {{ donor.donorLName }}
+        </td>
+
+        <td>
+            {{ donor.DOB }}
+        </td>
+
+        <td>
+            {{ donor.gender }}
+        </td>
+
+        <td>
+            {{ donor.contact }}
+        </td>
+
+        <td>
+            {{ donor.email or '—' }}
+        </td>
+
+        <td>
+            {{ donor.blood_type.abo_group }}
+            {{ '+' if donor.blood_type.rh_factor == 'Positive' else '-' }}
+        </td>
+
+        <td>
+
+            <a href="{{ url_for('donors.edit_donor', donor_id=donor.donor_id) }}">
+                Edit
+            </a>
+
+            <form
+                method="POST"
+                action="{{ url_for('donors.delete_donor', donor_id=donor.donor_id) }}"
+                style="display:inline"
+            >
+
+                <button
+                    type="submit"
+                    onclick="return confirm('Delete this donor?')"
+                >
+                    Delete
+                </button>
+
+            </form>
+
+        </td>
+
     </tr>
+
+    {% else %}
+
+    <tr>
+
+        <td colspan="8">
+            No donors found.
+        </td>
+
+    </tr>
+
     {% endfor %}
+
 </table>
+
 {% endblock %}

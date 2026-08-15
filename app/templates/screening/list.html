@@ -1,25 +1,90 @@
 {% extends "base.html" %}
-{% block title %}Screening{% endblock %}
+
+{% block title %}Screenings{% endblock %}
+
 {% block content %}
-<h1>Screening</h1>
-<a href="{{ url_for('screening.create_screening') }}" class="btn">+ New Screening</a>
+
+<h1>Screenings</h1>
+
+<a href="{{ url_for('screening.create_screening') }}" class="btn">
+    + New Screening
+</a>
+
+<form method="GET" action="{{ url_for('screening.list_screenings') }}" style="margin-top: 20px;">
+
+    <label for="status">Filter by Status:</label>
+
+    <select name="status" id="status">
+        <option value="">All Statuses</option>
+        <option value="Pending"
+            {% if status_filter == 'Pending' %}selected{% endif %}>
+            Pending
+        </option>
+        <option value="Passed"
+            {% if status_filter == 'Passed' %}selected{% endif %}>
+            Passed
+        </option>
+        <option value="Failed"
+            {% if status_filter == 'Failed' %}selected{% endif %}>
+            Failed
+        </option>
+    </select>
+
+    <button type="submit" class="btn">
+        Filter
+    </button>
+
+    {% if status_filter %}
+        <a href="{{ url_for('screening.list_screenings') }}" class="btn">
+            Clear
+        </a>
+    {% endif %}
+
+</form>
+
 <table>
-    <tr>
-        <th>ID</th><th>Blood Unit</th><th>Staff</th><th>Date</th><th>Status</th><th>Actions</th>
-    </tr>
-    {% for s in screenings %}
-    <tr>
-        <td>{{ s.Screening_id }}</td>
-        <td>{{ s.BloodUnitID }}</td>
-        <td>{{ s.StaffID }}</td>
-        <td>{{ s.ScreeningDate }}</td>
-        <td>{{ s.OverallStatus }}</td>
-        <td>
-            <form method="POST" action="{{ url_for('screening.delete_screening', screening_id=s.Screening_id) }}" style="display:inline">
-                <button type="submit" onclick="return confirm('Delete this screening?')">Delete</button>
-            </form>
-        </td>
-    </tr>
-    {% endfor %}
+    <thead>
+        <tr>
+            <th>Screening ID</th>
+            <th>Blood Unit ID</th>
+            <th>Staff ID</th>
+            <th>Screening Date</th>
+            <th>Overall Status</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        {% for screening in screenings %}
+        <tr>
+            <td>{{ screening.Screening_id }}</td>
+            <td>{{ screening.BloodUnitID }}</td>
+            <td>{{ screening.StaffID }}</td>
+            <td>{{ screening.ScreeningDate }}</td>
+            <td>{{ screening.OverallStatus }}</td>
+
+            <td>
+                <form
+                    method="POST"
+                    action="{{ url_for('screening.delete_screening', screening_id=screening.Screening_id) }}"
+                    style="display: inline;"
+                    onsubmit="return confirm('Are you sure you want to delete this screening?');"
+                >
+                    <button type="submit" class="btn">
+                        Delete
+                    </button>
+                </form>
+            </td>
+        </tr>
+
+        {% else %}
+        <tr>
+            <td colspan="6">
+                No screenings found.
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
 </table>
+
 {% endblock %}
