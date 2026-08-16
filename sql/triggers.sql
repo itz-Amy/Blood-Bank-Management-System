@@ -220,12 +220,14 @@ END//
 
 DELIMITER ;
 
------have to decide
--- 6. Automatically add a passed blood unit to inventory
+
+-- 9. Automatically add a passed blood unit to inventory
+DELIMITER //
+
 DROP TRIGGER IF EXISTS trg_AddPassedUnitToInventory//
 
 CREATE TRIGGER trg_AddPassedUnitToInventory
-AFTER UPDATE ON screening
+AFTER UPDATE ON Screening
 FOR EACH ROW
 BEGIN
     DECLARE v_branch_id VARCHAR(5);
@@ -234,22 +236,40 @@ BEGIN
     IF NEW.OverallStatus = 'Passed'
        AND OLD.OverallStatus <> 'Passed' THEN
 
-        SELECT br.branch_id
+        SELECT dn.branch_id
         INTO v_branch_id
         FROM BloodUnit bu
-        JOIN Donation dn ON bu.donation_id = dn.donation_id
-        JOIN Branch br ON dn.branch_id = br.branch_id
+        JOIN Donation dn
+            ON bu.donation_id = dn.donation_id
         WHERE bu.bloodUnit_id = NEW.BloodUnitID;
 
-        SET v_inventory_id = CONCAT(
+        SELECT CONCAT(
             'IN',
-            LPAD((SELECT COUNT(*) FROM Inventory) + 1, 3, '0')
-        );
+            LPAD(
+                COALESCE(
+                    MAX(CAST(SUBSTRING(inventory_id, 3) AS UNSIGNED)),0) + 1,
+                3,'0'
+            )
+        )
+        INTO v_inventory_id
+        FROM Inventory;
 
         INSERT INTO Inventory
-            (inventory_id, bloodUnit_id, branch_id, status)
+            (
+                inventory_id,
+                bloodUnit_id,
+                branch_id,
+                status
+            )
         VALUES
-            (v_inventory_id, NEW.BloodUnitID, v_branch_id, 'Available');
+            (
+                v_inventory_id,
+                NEW.BloodUnitID,
+                v_branch_id,
+                'Available'
+            );
 
     END IF;
 END//
+
+DELIMITER ;
