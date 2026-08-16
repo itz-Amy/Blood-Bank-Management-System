@@ -105,7 +105,7 @@ JOIN Hospital as h ON r.Hospital_id = h.Hospital_id
 WHERE h.HospitalName = 'Korle Bu Teaching Hospital';
 
 
--- 3. High priority pending blood requests
+-- 13. High priority pending blood requests
 SELECT r.Request_id, h.HospitalName, r.Quantity, r.RequestDate
 FROM Request as r
 JOIN Hospital as h ON r.Hospital_id = h.Hospital_id

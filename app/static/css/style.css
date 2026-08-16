@@ -274,6 +274,7 @@ form input[type="date"], form input[type="number"], form select {
     color: #777;
 }
 
+
 /*  mobile */
 
 @media (max-width: 768px) {

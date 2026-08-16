@@ -14,10 +14,13 @@ def home():
     role_name = None
     stats = {}
 
+  
+
     if current_user.user_type == 'staff' and current_user.staff:
 
         role_name = ROLE_MAP.get(current_user.staff.role_id)
 
+       
         if role_name == 'phlebotomist':
 
             stats = {
@@ -38,6 +41,7 @@ def home():
                 ).scalar()
             }
 
+       
         elif role_name == 'lab_tech':
 
             stats = {
@@ -58,6 +62,7 @@ def home():
                 ).scalar()
             }
 
+       
         elif role_name == 'blood_bank_manager':
 
             stats = {
@@ -84,6 +89,7 @@ def home():
                 ).scalar()
             }
 
+ 
     elif current_user.user_type == 'hospital':
 
         role_name = 'hospital_rep'

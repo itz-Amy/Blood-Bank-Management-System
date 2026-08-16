@@ -52,7 +52,6 @@ def create_test_result():
 
     form = TestResultForm()
 
-    # Populate Test dropdown
     tests = Test.query.order_by(Test.TestName).all()
 
     form.Test_id.choices = [

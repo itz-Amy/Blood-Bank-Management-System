@@ -31,7 +31,6 @@ def list_distributions():
 def create_distribution():
     form = IssuanceForm()
 
-    # Get approved requests
     approved_requests = (
         Request.query
         .filter_by(Status="Approved")
@@ -39,7 +38,6 @@ def create_distribution():
         .all()
     )
 
-    # Only show requests that still have units remaining
     available_requests = []
 
     for req in approved_requests:
