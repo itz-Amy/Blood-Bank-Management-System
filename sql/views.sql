@@ -1,5 +1,7 @@
 USE bloodbank;
 
+-- summary of all blood units currently available in inventory --
+
 DROP VIEW IF EXISTS vw_availableinventory;
 CREATE VIEW vw_availableinventory AS
 SELECT
@@ -24,6 +26,8 @@ GROUP BY
     bt.abo_group,
     bt.rh_factor;
 
+
+-- Shows the number of available blood units that are compatible with each hospital request.--
 
 DROP VIEW IF EXISTS vw_compatibleavailableunits;
 CREATE VIEW vw_compatibleavailableunits AS
@@ -56,6 +60,7 @@ GROUP BY
     br.branch_id,
     br.branchName;
 
+-- Shows donors who are currently eligible to donate blood.-- 
 
 DROP VIEW IF EXISTS vw_eligibledonors;
 CREATE VIEW vw_eligibledonors AS
@@ -87,6 +92,8 @@ HAVING
     OR MAX(dn.DonationDate) <= CURDATE() - INTERVAL 56 DAY;
 
 
+-- detailed view of blood screening records, including the blood unit, screening information, test and test results performed.--
+       
 DROP VIEW IF EXISTS vw_screeningstatus;
 CREATE VIEW vw_screeningstatus AS
 SELECT
