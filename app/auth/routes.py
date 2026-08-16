@@ -26,6 +26,8 @@ def login():
             return redirect(url_for("main.home"))
         flash("Invalid ID or password.", "danger")
 
+
+
     return render_template("auth/login.html", form=form)
 
 
