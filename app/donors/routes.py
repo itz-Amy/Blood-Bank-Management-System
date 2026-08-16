@@ -20,7 +20,6 @@ def list_donors():
 
     query = Donor.query
 
-    # Search by ID or name
     if search:
         query = query.filter(
             (Donor.donor_id.ilike(f'%{search}%')) |
@@ -28,13 +27,11 @@ def list_donors():
             (Donor.donorLName.ilike(f'%{search}%'))
         )
 
-    # Blood type filter
     if blood_type_filter:
         query = query.filter(
             Donor.blood_type_id == blood_type_filter
         )
 
-    # Eligibility filter
     if eligibility_filter == 'eligible':
 
         eligible_ids = db.session.execute(

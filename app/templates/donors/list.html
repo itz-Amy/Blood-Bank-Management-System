@@ -8,9 +8,7 @@
 
 <a href="{{ url_for('donors.create_donor') }}">+ New Donor</a>
 
-<!-- ========================= -->
-<!-- SEARCH AND FILTERS -->
-<!-- ========================= -->
+
 
 <form method="GET">
 
@@ -22,7 +20,6 @@
         value="{{ request.args.get('search', '') }}"
     >
 
-    <!-- Blood Type -->
     <select name="blood_type">
 
         <option value="">All Blood Types</option>
@@ -42,7 +39,6 @@
 
     </select>
 
-    <!-- Eligibility -->
     <select name="eligibility">
 
         <option
@@ -60,14 +56,13 @@
                 selected
             {% endif %}
         >
-            Eligible Donors
+        
         </option>
 
     </select>
 
     <button type="submit">Filter</button>
 
-    <!-- Clear Filters -->
     <a href="{{ url_for('donors.list_donors') }}">
         Clear
     </a>
@@ -75,9 +70,7 @@
 </form>
 
 
-<!-- ========================= -->
-<!-- DONOR TABLE -->
-<!-- ========================= -->
+
 
 <table border="1" cellpadding="6">
 
