@@ -74,14 +74,14 @@ GRANT SELECT, INSERT ON bloodbank.request TO hospital_rep;
 GRANT SELECT, INSERT ON bloodbank.issuance TO hospital_rep;
 GRANT EXECUTE ON PROCEDURE bloodbank.sp_CreateRequest TO hospital_rep;
 
--- grant the roles to the bloodbank_app user--
+-- grant the roles to the bloodbank_app user --
 
 GRANT phlebotomist TO 'bloodbank_app'@'localhost';
 GRANT lab_tech TO 'bloodbank_app'@'localhost';
 GRANT blood_bank_manager TO 'bloodbank_app'@'localhost';
 GRANT hospital_rep TO 'bloodbank_app'@'localhost';
 
---Select privileges for the bloodbank_app user
+--Select privileges for the bloodbank_app user --
 GRANT SELECT ON bloodbank.bloodtype TO 'bloodbank_app'@'localhost';
 GRANT SELECT ON bloodbank.bloodunit TO 'bloodbank_app'@'localhost';
 GRANT SELECT ON bloodbank.branch TO 'bloodbank_app'@'localhost';
