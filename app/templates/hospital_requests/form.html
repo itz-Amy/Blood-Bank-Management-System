@@ -1,15 +1,55 @@
 {% extends "base.html" %}
-{% block title %}{{ title }}{% endblock %}
+
+{% block title %}
+{{ title }}
+{% endblock %}
+
 {% block content %}
+
 <h1>{{ title }}</h1>
+
 <form method="POST">
+
     {{ form.hidden_tag() }}
-    <p>{{ form.Request_id.label }}<br>{{ form.Request_id() }}</p>
-    <p>{{ form.BloodType.label }}<br>{{ form.BloodType() }}</p>
-    <p>{{ form.Priority.label }}<br>{{ form.Priority() }}</p>
-    <p>{{ form.Quantity.label }}<br>{{ form.Quantity() }}</p>
-    <p>{{ form.RequestDate.label }}<br>{{ form.RequestDate() }}</p>
-    {{ form.submit() }}
+
+    <p>
+        {{ form.BloodType.label }}<br>
+        {{ form.BloodType() }}
+
+        {% for error in form.BloodType.errors %}
+            <br>
+            <small>{{ error }}</small>
+        {% endfor %}
+    </p>
+
+    <p>
+        {{ form.Priority.label }}<br>
+        {{ form.Priority() }}
+
+        {% for error in form.Priority.errors %}
+            <br>
+            <small>{{ error }}</small>
+        {% endfor %}
+    </p>
+
+    <p>
+        {{ form.Quantity.label }}<br>
+        {{ form.Quantity() }}
+
+        {% for error in form.Quantity.errors %}
+            <br>
+            <small>{{ error }}</small>
+        {% endfor %}
+    </p>
+
+    <p>
+        {{ form.submit() }}
+    </p>
+
 </form>
-<a href="{{ url_for('hospital_requests.list_requests') }}">Back to list</a>
+
+<a href="{{ url_for('hospital_requests.list_requests') }}">
+    Back to list
+</a>
+
 {% endblock %}

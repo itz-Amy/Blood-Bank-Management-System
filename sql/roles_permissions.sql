@@ -72,6 +72,7 @@ GRANT SELECT ON bloodbank.compatibility TO hospital_rep;
 GRANT SELECT ON bloodbank.bloodtype TO hospital_rep;
 GRANT SELECT, INSERT ON bloodbank.request TO hospital_rep;
 GRANT SELECT, INSERT ON bloodbank.issuance TO hospital_rep;
+GRANT EXECUTE ON PROCEDURE bloodbank.sp_CreateRequest TO hospital_rep;
 
 -- grant the roles to the bloodbank_app user--
 

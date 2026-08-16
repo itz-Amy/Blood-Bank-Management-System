@@ -1,5 +1,6 @@
-from flask import render_template, redirect, url_for, flash, request
+from flask import render_template, redirect, url_for, flash
 from flask_login import login_required, current_user
+from sqlalchemy import text
 from sqlalchemy.exc import IntegrityError, OperationalError
 
 from app.hospital_requests import hospital_requests_bp
@@ -36,10 +37,7 @@ def list_requests():
     )
 
 
-@hospital_requests_bp.route(
-    "/requests/new",
-    methods=["GET", "POST"]
-)
+@hospital_requests_bp.route("/requests/new", methods=["GET", "POST"])
 @login_required
 @hospital_required
 def create_request():
@@ -56,26 +54,27 @@ def create_request():
 
     if form.validate_on_submit():
 
-        req = Request(
-            Request_id=form.Request_id.data,
-            BloodType=form.BloodType.data,
-            Priority=form.Priority.data,
-            Status="Pending",
-            RequestDate=form.RequestDate.data,
-            Quantity=form.Quantity.data,
-            Hospital_id=current_user.hospital_id,
-        )
-
         try:
-
-            db.session.add(req)
+            db.session.execute(
+                text("""
+                    CALL sp_CreateRequest(
+                        :blood_type,
+                        :priority,
+                        :quantity,
+                        :hospital_id
+                    )
+                """),
+                {
+                    "blood_type": form.BloodType.data,
+                    "priority": form.Priority.data,
+                    "quantity": form.Quantity.data,
+                    "hospital_id": current_user.hospital_id,
+                }
+            )
 
             db.session.commit()
 
-            flash(
-                "Request submitted.",
-                "success"
-            )
+            flash("Request submitted.", "success")
 
             return redirect(
                 url_for("hospital_requests.list_requests")
