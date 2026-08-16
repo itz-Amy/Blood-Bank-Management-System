@@ -27,43 +27,43 @@ MariaDB	 - Relational database management system
 HTML/CSS/Jinja2	- Frontend and dynamic web pages   
 Git/GitHub - Version control and source-code management  
 
-How to install the application
-1. Clone the repository
-git clone https://github.com/itz-Amy/Blood-Bank-Management-System.git
-cd Blood-Bank-Management-System
+How to install the application   
+1. Clone the repository   
+git clone https://github.com/itz-Amy/Blood-Bank-Management-System.git  
+cd Blood-Bank-Management-System  
 
-2.Create a virtual environment and activate it
-python -m venv .venv
-.venv\Scripts\Activate.ps1(Powershell activation)  or .venv\Scripts\activate(Command Shell)
+2.Create a virtual environment and activate it  
+python -m venv .venv  
+.venv\Scripts\Activate.ps1(Powershell activation)  or .venv\Scripts\activate(Command Shell)  
 
-3. Install the required Python packages
-pip install -r requirements.txt
+3. Install the required Python packages  
+pip install -r requirements.txt  
 
-4. Configure environment variables
-Create a .env file containing the application's configuration, including the Flask secret key and MariaDB database connection string
+4. Configure environment variables  
+Create a .env file containing the application's configuration, including the Flask secret key and MariaDB database connection string  
 
    
 
-How to create database:
-Import the create_database.sql file
-Import the create_tables.sql file
+How to create database:  
+Import the create_database.sql file  
+Import the create_tables.sql file  
 
-How to populate the database 
-Import the insert.sql file 
-Import the triggers.sql file 
-Import the views.sql file 
-Import the procedures.sql file 
+How to populate the database   
+Import the insert.sql file   
+Import the triggers.sql file   
+Import the views.sql file   
+Import the procedures.sql file   
 
-How to run the application
-We used the terminal to start a local Flask development server.
-Navigate to the project directory and run  - flask run
+How to run the application  
+We used the terminal to start a local Flask development server.  
+Navigate to the project directory and run  - flask run   
 
-Flask will start a local development server, typically at:
-http://127.0.0.1:5000
+Flask will start a local development server, typically at:  
+http://127.0.0.1:5000  
 
-Test account credentials
-U001 → Manager@123
-U002 → Phleb@123
-U003 → LabTech@123
-U004 → Hospital@123
+Test account credentials  
+U001 → Manager@123  
+U002 → Phleb@123  
+U003 → LabTech@123  
+U004 → Hospital@123  
 
