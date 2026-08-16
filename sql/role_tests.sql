@@ -1,4 +1,4 @@
----Sample queries to set permissions
+-- Sample queries to set permissions --
 SET ROLE phlebotomist;
 
 SELECT * FROM bloodbank.Donor;
