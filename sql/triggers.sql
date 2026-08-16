@@ -223,7 +223,6 @@ DELIMITER ;
 
 -- 9. Automatically add a passed blood unit to inventory
 DELIMITER //
-
 DROP TRIGGER IF EXISTS trg_AddPassedUnitToInventory//
 
 CREATE TRIGGER trg_AddPassedUnitToInventory
@@ -245,30 +244,21 @@ BEGIN
 
         SELECT CONCAT(
             'IN',
-            LPAD(
-                COALESCE(
-                    MAX(CAST(SUBSTRING(inventory_id, 3) AS UNSIGNED)),0) + 1,
-                3,'0'
-            )
-        )
+            LPAD(COALESCE(
+                    MAX(CAST(SUBSTRING(inventory_id, 3) AS UNSIGNED)),0) + 1,3,'0'))
         INTO v_inventory_id
         FROM Inventory;
 
         INSERT INTO Inventory
-            (
-                inventory_id,
+            ( inventory_id,
                 bloodUnit_id,
                 branch_id,
-                status
-            )
+                status)
         VALUES
-            (
-                v_inventory_id,
+            (  v_inventory_id,
                 NEW.BloodUnitID,
                 v_branch_id,
-                'Available'
-            );
-
+                'Available' );
     END IF;
 END//
 
