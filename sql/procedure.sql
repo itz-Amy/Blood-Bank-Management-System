@@ -133,9 +133,10 @@ BEGIN
     VALUES (v_result_id, p_screening_id, p_test_id, p_result);
 END //
 
-DELIMITER //
 
 -- registering donations and add a blood unit to the table
+DELIMITER //
+
 CREATE PROCEDURE sp_RegisterDonation(
     IN p_donor_id VARCHAR(5),
     IN p_volume DECIMAL(5,2),
