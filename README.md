@@ -4,10 +4,10 @@ The National Blood Bank Management System is designed to manage donor registrati
 
 
 Group members:
-Kwantsimah Orleans Boham\n 
-Amy Ruth Doe Addo\n 
-Sean Arthur\n
-Lyse Claudia Irera\n
+Kwantsimah Orleans Boham   
+Amy Ruth Doe Addo   
+Sean Arthur   
+Lyse Claudia Irera   
 
 
 Database Management System used 
@@ -17,15 +17,15 @@ Programming Language
 Python 
 SQL
 
-Technologies used:\n
-Python 3.11 - Backend programming language\n
-Flask	- Web application framework\n
-SQLAlchemy / Flask-SQLAlchemy - SQLAlchemy was used as the Python ORM for database interaction, while Flask-SQLAlchemy provided integration between SQLAlchemy and                                   the Flask application.\n
-Flask-Login - User authentication and session management\n
-Flask-WTF / WTForms	 - Web forms and form validation\n
-MariaDB	 - Relational database management system\n
-HTML/CSS/Jinja2	- Frontend and dynamic web pages\n
-Git/GitHub - Version control and source-code management\n
+Technologies used:  
+Python 3.11 - Backend programming language   
+Flask	- Web application framework   
+SQLAlchemy / Flask-SQLAlchemy - SQLAlchemy was used as the Python ORM for database interaction, while Flask-SQLAlchemy provided integration between SQLAlchemy and                                   the Flask application.   
+Flask-Login - User authentication and session management   
+Flask-WTF / WTForms	 - Web forms and form validation   
+MariaDB	 - Relational database management system    
+HTML/CSS/Jinja2	- Frontend and dynamic web pages   
+Git/GitHub - Version control and source-code management  
 
 How to install the application
 1. Clone the repository
