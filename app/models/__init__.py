@@ -7,5 +7,4 @@ from app.models.hospital import *
 from app.models.request import *
 from app.models.issuance import *
 from app.models.staff import *
-from app.models.distribution import *
 from app.models.user import User

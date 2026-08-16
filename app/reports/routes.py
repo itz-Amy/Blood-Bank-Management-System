@@ -17,7 +17,7 @@ def index():
     return render_template("reports/index.html")
 
 
-# ==================== INVENTORY REPORT ====================
+# inventory report
 
 @reports_bp.route("/reports/inventory/excel")
 @login_required
@@ -64,7 +64,7 @@ def export_inventory():
     )
 
 
-# ==================== REQUEST REPORT ====================
+# request report
 
 @reports_bp.route("/reports/requests/excel")
 @login_required
@@ -109,7 +109,7 @@ def export_requests():
     )
 
 
-# ==================== ISSUANCE REPORT ====================
+# issuance report
 
 @reports_bp.route("/reports/issuances/excel")
 @login_required

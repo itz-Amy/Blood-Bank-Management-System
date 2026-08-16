@@ -37,7 +37,7 @@ class IssuanceForm(FlaskForm):
 
         if not req:
             raise ValidationError("Request does not exist.")
-
+        
         if req.Status != "Approved":
             raise ValidationError(
                 "Only approved requests can be issued."

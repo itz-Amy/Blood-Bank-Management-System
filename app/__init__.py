@@ -62,10 +62,10 @@ def create_app():
     from app.screening import screening_bp
     from app.inventory import inventory_bp
     from app.hospital_requests import hospital_requests_bp
-    from app.distribution import distribution_bp
     from app.blood_units import blood_units_bp
     from app.test_results import test_results_bp
     from app.reports import reports_bp
+    from app.distribution import distribution_bp
 
     
 
@@ -76,9 +76,9 @@ def create_app():
     app.register_blueprint(screening_bp)
     app.register_blueprint(inventory_bp)
     app.register_blueprint(hospital_requests_bp)
-    app.register_blueprint(distribution_bp)
     app.register_blueprint(blood_units_bp)
     app.register_blueprint(test_results_bp)
     app.register_blueprint(reports_bp)
+    app.register_blueprint(distribution_bp)
 
     return app

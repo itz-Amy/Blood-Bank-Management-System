@@ -1,8 +1,5 @@
-USE bloodbank;
-
+-- check if a donor has an active deferral
 DELIMITER //
-
-DROP FUNCTION IF EXISTS fn_hasactivedeferral//
 
 CREATE FUNCTION fn_hasactivedeferral(
     p_donor_id VARCHAR(5)
@@ -28,7 +25,8 @@ BEGIN
     END IF;
 END//
 
-DROP FUNCTION IF EXISTS fn_daysbetween//
+-- calculate days between two dates, functional because we had to calculate that in many of queries 
+DELIMITER //
 
 CREATE FUNCTION fn_daysbetween(
     start_date DATE,

@@ -158,7 +158,7 @@ form input[type="date"], form input[type="number"], form select {
     color: #666;
 }
 
-/* ==================== DASHBOARD ==================== */
+/* dashboard */
 
 .dashboard-header {
     display: flex;
@@ -186,7 +186,7 @@ form input[type="date"], form input[type="number"], form select {
 }
 
 
-/* ==================== STAT CARDS ==================== */
+/* stat cards */
 
 .stats-grid {
     display: grid;
@@ -227,7 +227,7 @@ form input[type="date"], form input[type="number"], form select {
 }
 
 
-/* ==================== QUICK ACTIONS ==================== */
+/* quick actions */
 
 .quick-actions {
     margin-top: 10px;
@@ -274,8 +274,7 @@ form input[type="date"], form input[type="number"], form select {
     color: #777;
 }
 
-
-/* ==================== MOBILE ==================== */
+/*  mobile */
 
 @media (max-width: 768px) {
 

@@ -14,17 +14,10 @@ def home():
     role_name = None
     stats = {}
 
-    # =========================
-    # STAFF USERS
-    # =========================
-
     if current_user.user_type == 'staff' and current_user.staff:
 
         role_name = ROLE_MAP.get(current_user.staff.role_id)
 
-        # -------------------------
-        # PHLEBOTOMIST
-        # -------------------------
         if role_name == 'phlebotomist':
 
             stats = {
@@ -45,9 +38,6 @@ def home():
                 ).scalar()
             }
 
-        # -------------------------
-        # LAB TECHNICIAN
-        # -------------------------
         elif role_name == 'lab_tech':
 
             stats = {
@@ -68,9 +58,6 @@ def home():
                 ).scalar()
             }
 
-        # -------------------------
-        # BLOOD BANK MANAGER
-        # -------------------------
         elif role_name == 'blood_bank_manager':
 
             stats = {
@@ -96,10 +83,6 @@ def home():
                     text("SELECT COUNT(*) FROM Hospital")
                 ).scalar()
             }
-
-    # =========================
-    # HOSPITAL USERS
-    # =========================
 
     elif current_user.user_type == 'hospital':
 
