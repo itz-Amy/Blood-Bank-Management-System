@@ -1,4 +1,4 @@
-from flask import render_template, redirect, url_for, flash, abort
+from flask import render_template, redirect, url_for, flash, abort, request
 from flask_login import login_required, current_user
 from sqlalchemy import text
 from sqlalchemy.exc import OperationalError, IntegrityError
@@ -19,18 +19,34 @@ def list_test_results():
     if not current_user.staff:
         abort(403)
 
+    screening_id = request.args.get('screening_id', '').strip()
+
+    query = """
+        SELECT
+            tr.TestResultID,
+            tr.Screening_id,
+            t.TestName,
+            tr.Result
+        FROM TestResult tr
+        JOIN Test t
+            ON tr.Test_id = t.Test_id
+    """
+
+    params = {}
+
+    if screening_id:
+        query += """
+            WHERE tr.Screening_id = :screening_id
+        """
+        params['screening_id'] = screening_id
+
+    query += """
+        ORDER BY tr.TestResultID
+    """
+
     result = db.session.execute(
-        text("""
-            SELECT
-                tr.TestResultID,
-                tr.Screening_id,
-                t.TestName,
-                tr.Result
-            FROM TestResult tr
-            JOIN Test t
-                ON tr.Test_id = t.Test_id
-            ORDER BY tr.TestResultID
-        """)
+        text(query),
+        params
     )
 
     test_results = result.fetchall()

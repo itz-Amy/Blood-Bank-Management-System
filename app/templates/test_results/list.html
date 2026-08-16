@@ -10,6 +10,29 @@
     + Record Test Result
 </a>
 
+<br><br>
+
+<form method="GET">
+
+    <label for="screening_id">Screening ID:</label>
+
+    <input
+        type="text"
+        name="screening_id"
+        id="screening_id"
+        value="{{ request.args.get('screening_id', '') }}"
+        placeholder="SC000"
+        style ="width: 120px;"
+    >
+
+    <button type="submit">Filter</button>
+
+    <a href="{{ url_for('test_results.list_test_results') }}">
+        Clear
+    </a>
+
+</form>
+
 <table>
     <tr>
         <th>Result ID</th>
