@@ -114,7 +114,7 @@ BEGIN
 
     COMMIT;
 END //
-
+DELIMITER ;
 -- recording a test result
 
 DELIMITER //
@@ -132,7 +132,7 @@ BEGIN
     INSERT INTO TestResult (TestResultID, Screening_id, Test_id, Result)
     VALUES (v_result_id, p_screening_id, p_test_id, p_result);
 END //
-
+DELIMITER ;
 
 -- registering donations and add a blood unit to the table
 DELIMITER //
